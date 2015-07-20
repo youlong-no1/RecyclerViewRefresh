@@ -13,8 +13,9 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
 
     private ArrayList<String> arrayList;
-
+    /**下拉刷新*/
     private SwipeRefreshLayout swipeRefreshLayout;
+    /**list列表*/
     private RecyclerView mRecyclerView;
 
     private CustomAdapter customAdapter;
