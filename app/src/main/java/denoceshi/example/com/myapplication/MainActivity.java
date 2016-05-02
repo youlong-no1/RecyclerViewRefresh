@@ -5,31 +5,46 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
     private ArrayList<String> arrayList;
-    /**ÏÂÀ­Ë¢ĞÂ*/
+    /**ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½*/
     private SwipeRefreshLayout swipeRefreshLayout;
-    /**listÁĞ±í*/
+    /**listï¿½Ğ±ï¿½*/
     private RecyclerView mRecyclerView;
 
+    private ListView listView;
+
     private CustomAdapter customAdapter;
-    protected RecyclerView.LayoutManager mLayoutManager;
+
+    private ListViewAdapter listViewAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        mRecyclerView= (RecyclerView) findViewById(R.id.list);
 
-        mLayoutManager = new LinearLayoutManager(MainActivity.this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        listView= (ListView) findViewById(R.id.listview);
+        View view= LayoutInflater.from(this).inflate(R.layout.item_head,null);
+        mRecyclerView= (RecyclerView) view.findViewById(R.id.list);
+
+//        mLayoutManager = new LinearLayoutManager(MainActivity.this);
+
+        // çº¿æ€§å¸ƒå±€ç®¡ç†å™¨
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         arrayList=new ArrayList<String>();
         for (int i=0;i<5;i++){
             arrayList.add("list item"+i);
@@ -37,6 +52,11 @@ public class MainActivity extends Activity {
 
         customAdapter=new CustomAdapter(arrayList);
         mRecyclerView.setAdapter(customAdapter);
+
+
+        listView.addHeaderView(view, null, true);
+        listViewAdapter=new ListViewAdapter(this,arrayList);
+        listView.setAdapter(listViewAdapter);
 
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -47,6 +67,7 @@ public class MainActivity extends Activity {
             public void onRefresh() {
                 arrayList.add("item"+1);
                 customAdapter.notifyDataSetChanged();
+                listViewAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
